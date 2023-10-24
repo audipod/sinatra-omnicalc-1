@@ -44,10 +44,24 @@ get ("/payment/results") do
   @the_years = params.fetch("user_years").to_f
   @the_principal = params.fetch("user_pv").to_f
   
-  r = @the_APR / 12
+  apr = @the_APR / 100
+  r = apr / 12
   numerator = r * @the_principal
-  denominator = 1 - (1 + r)**-@the_years
+  denominator = 1 - (1 + r)**-(@the_years*12)
   @the_payment = numerator / denominator
 
   erb(:payment_results)
+end
+
+get ("/random/new") do
+  
+  
+  erb(:random_calc)
+end
+
+get("/random/results") do
+    @user_min = params.fetch("user_min").to_i
+    @user_max = params.fetch("user_max").to_i
+    @random_number = rand(@user_min..@user_max)
+    erb(:random_results)
 end
